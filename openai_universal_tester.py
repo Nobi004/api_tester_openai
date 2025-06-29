@@ -234,7 +234,7 @@ def save_uploaded_file(uploaded_file):
         return tmp_file.name
 
 # UI Components
-st.title("🚀 OpenAI Universal Model Tester")
+st.title("🚀 OpenAI Universal Model Tester @NOBI")
 st.markdown("Test all OpenAI models: Chat, Voice, Image, Video, Embeddings, and more!")
 
 # Sidebar for API key input and testing
