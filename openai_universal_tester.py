@@ -13,7 +13,7 @@ import mimetypes
 
 # Page configuration
 st.set_page_config(
-    page_title="OpenAI Universal Model Tester",
+    page_title="OpenAI Universal Model Tester by @ Nobi",
     page_icon="🚀",
     layout="wide"
 )
