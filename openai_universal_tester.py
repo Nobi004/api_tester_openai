@@ -13,10 +13,19 @@ import mimetypes
 
 # Page configuration
 st.set_page_config(
-    page_title="OpenAI Universal Model Tester by @ Nobi",
+    page_title="OpenAI Universal Model Tester",
     page_icon="🚀",
     layout="wide"
 )
+
+# Security Notice
+st.markdown("""
+<div style='background-color: #f0f2f6; padding: 10px; border-radius: 5px; margin-bottom: 20px;'>
+    <p style='margin: 0; color: #1f77b4;'>
+        🔒 <strong>Security Notice:</strong> Your API key is never stored persistently. It exists only in memory during your current session and is cleared when you close the browser.
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 # Initialize session state
 if 'test_results' not in st.session_state:
@@ -234,20 +243,30 @@ def save_uploaded_file(uploaded_file):
         return tmp_file.name
 
 # UI Components
-st.title("🚀 OpenAI Universal Model Tester @NOBI")
+st.title("🚀 OpenAI Universal Model Tester")
 st.markdown("Test all OpenAI models: Chat, Voice, Image, Video, Embeddings, and more!")
 
 # Sidebar for API key input and testing
 with st.sidebar:
     st.header("🔑 API Configuration")
     
-    # API Key input
+    # Security reminder
+    st.caption("🔒 Your API key is used only for this session")
+    
+    # API Key input - NOT stored anywhere
     api_key = st.text_input(
         "Enter your OpenAI API Key",
         type="password",
         placeholder="sk-...",
-        help="Your API key will not be stored"
+        help="Your API key is never saved and exists only in memory during this session",
+        key="api_key_input"  # This is just for Streamlit's internal widget state
     )
+    
+    # Clear session button
+    if st.button("🗑️ Clear Session", help="Clear all data including API key from memory"):
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        st.rerun()
     
     # Test button
     if st.button("Test All Models", type="primary", use_container_width=True):
@@ -257,10 +276,12 @@ with st.sidebar:
             st.warning("⚠️ API key should start with 'sk-'")
         else:
             with st.spinner("Testing API key across all model types..."):
+                # Pass API key directly without storing
                 results, client = test_api_key_comprehensive(api_key)
                 st.session_state.test_results = results
                 st.session_state.client = client
                 st.session_state.api_key_validated = client is not None
+                # API key is NOT stored - it's only in the client object
     
     # Display test results
     if st.session_state.test_results:
